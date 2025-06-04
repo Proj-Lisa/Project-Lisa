@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6h5ot0h77gm3"]
+
+[ext_resource type="Texture2D" uid="uid://bfbwi6kkmi4qe" path="res://Assets/Sprites/Environments/Levels/Level-BridgeWater.png" id="1_26vct"]
+
+[node name="E-bridge-water" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+polygon = PackedVector2Array(5, -159, 400, -155, 400, -173, 21, -207, -399, -175, -400, -153)
+
+[node name="Level-bridgeWater" type="Sprite2D" parent="."]
+position = Vector2(0, -114.25)
+scale = Vector2(1, 0.997817)
+texture = ExtResource("1_26vct")

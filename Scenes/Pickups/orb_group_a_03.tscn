@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://dr1biwdnr5s8m"]
+
+[ext_resource type="PackedScene" uid="uid://dq1md52vw1p2r" path="res://Scenes/Pickups/orb.tscn" id="1_drb4s"]
+
+[node name="Orb-Group-A03" type="Node2D"]
+
+[node name="Orb" parent="." instance=ExtResource("1_drb4s")]
+position = Vector2(-35, 0)
+
+[node name="Orb2" parent="." instance=ExtResource("1_drb4s")]
+position = Vector2(0, -4)
+
+[node name="Orb3" parent="." instance=ExtResource("1_drb4s")]
+position = Vector2(34, 0)

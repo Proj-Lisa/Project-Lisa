@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=3 uid="uid://cv2e4d63823nk"]
+
+[ext_resource type="Texture2D" uid="uid://dxbvq15smr6pe" path="res://Assets/Sprites/Characters/Region-01/Enemy-Copter-1.png" id="1_7ofwf"]
+[ext_resource type="Script" uid="uid://cpo5rr4xihayo" path="res://Scripts/copter.gd" id="1_y2w8l"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y2w8l"]
+atlas = ExtResource("1_7ofwf")
+region = Rect2(0, 0, 282, 170)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vkmpk"]
+atlas = ExtResource("1_7ofwf")
+region = Rect2(282, 0, 282, 170)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y4d4q"]
+atlas = ExtResource("1_7ofwf")
+region = Rect2(564, 0, 282, 170)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_upqql"]
+atlas = ExtResource("1_7ofwf")
+region = Rect2(846, 0, 282, 170)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vu221"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y2w8l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vkmpk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y4d4q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_upqql")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
+[node name="Copter" type="Node2D"]
+script = ExtResource("1_y2w8l")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_vu221")
+autoplay = "default"
+frame_progress = 0.513452
+
+[node name="RayCastRight" type="RayCast2D" parent="."]
+position = Vector2(0, 33)
+target_position = Vector2(169, 0)
+
+[node name="RayCastLeft" type="RayCast2D" parent="."]
+position = Vector2(0, 33)
+rotation = 3.14159
+target_position = Vector2(169, 0)

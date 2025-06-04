@@ -1,0 +1,229 @@
+[gd_scene load_steps=19 format=3 uid="uid://bjxaqr3y16g2c"]
+
+[ext_resource type="PackedScene" uid="uid://4byaim2dyifn" path="res://Scenes/player.tscn" id="1_ebmjs"]
+[ext_resource type="PackedScene" uid="uid://bt2hpyh1oycvy" path="res://Scenes/BG/BG-LakeFrontWrap.tscn" id="1_h4fw4"]
+[ext_resource type="PackedScene" uid="uid://dltvqyrf1ejj4" path="res://Scenes/Environments/Ground/g-00-full.tscn" id="2_ldgsr"]
+[ext_resource type="PackedScene" uid="uid://c6h5ot0h77gm3" path="res://Scenes/Environments/e-bridge-water.tscn" id="2_qxrlw"]
+[ext_resource type="PackedScene" uid="uid://cf0jur3itmmmf" path="res://Scenes/Environments/Ground/g-01-wavy.tscn" id="3_ldgsr"]
+[ext_resource type="PackedScene" uid="uid://di6ipybmw2iea" path="res://Scenes/Environments/e_platform_a.tscn" id="4_3dryh"]
+[ext_resource type="PackedScene" uid="uid://bwi8vqoj6h6fs" path="res://Scenes/Environments/platform_moving_drift.tscn" id="5_wowpa"]
+[ext_resource type="PackedScene" uid="uid://dq1md52vw1p2r" path="res://Scenes/Pickups/orb.tscn" id="6_1l0tm"]
+[ext_resource type="PackedScene" uid="uid://dr1biwdnr5s8m" path="res://Scenes/Pickups/orb_group_a_03.tscn" id="7_v158k"]
+[ext_resource type="PackedScene" uid="uid://dh0u567rm4vi5" path="res://Scenes/Environments/e-build-apt1.tscn" id="8_rku1e"]
+[ext_resource type="PackedScene" uid="uid://cfgw14us7s7xe" path="res://Scenes/Environments/slingshot.tscn" id="8_v158k"]
+[ext_resource type="PackedScene" uid="uid://cv2e4d63823nk" path="res://Scenes/Enemies/copter.tscn" id="9_rfjv2"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_wrm1d"]
+distance = -259.0
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_h4fw4"]
+distance = -47.0
+
+[sub_resource type="Animation" id="Animation_i6g32"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(586, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="Animation" id="Animation_wowpa"]
+resource_name = "UpDown"
+loop_mode = 2
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(586, -0.25, 0, 0.25, 0, 316, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 1)
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(0, 0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0, 181, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0, 1)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1l0tm"]
+_data = {
+&"RESET": SubResource("Animation_i6g32"),
+&"UpDown": SubResource("Animation_wowpa")
+}
+
+[sub_resource type="GDScript" id="GDScript_ebmjs"]
+script/source = "extends CharacterBody2D
+
+const SPEED = 540.0
+const JUMP_VELOCITY = -500.0
+const GRAVITY_FACTOR = 1.8 #increases gravity for faster-fall responsiveness
+
+@onready var monaSprite = $MonaSprite2D
+
+func _physics_process(delta: float) -> void:
+	# Add the gravity.
+	if not is_on_floor():
+		velocity += get_gravity() * delta * GRAVITY_FACTOR
+
+	# Handle jump.
+	if Input.is_action_just_pressed(\"jump\") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+
+	# Get input direction: -1, 0, 1
+	var direction := Input.get_axis(\"move_Left\", \"move_Right\")
+	
+	#flip the sprite
+	if direction > 0:
+		monaSprite.flip_h = false
+	elif direction < 0:
+		monaSprite.flip_h = true
+	
+	#play animations
+	if direction == 0:
+		monaSprite.play(\"A-Idle\")
+	else:
+		monaSprite.play(\"B-Run2\")
+	
+	#apply the movement
+	if direction:
+		velocity.x = direction * SPEED
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+
+	move_and_slide()
+"
+
+[node name="Game" type="Node2D"]
+
+[node name="BG" type="Node" parent="."]
+
+[node name="Bg-lakeFrontWrap" parent="BG" instance=ExtResource("1_h4fw4")]
+position = Vector2(-1509, 191)
+
+[node name="Ground" type="Node" parent="."]
+
+[node name="BotBorder" type="StaticBody2D" parent="Ground"]
+
+[node name="WorldBoundary" type="CollisionShape2D" parent="Ground/BotBorder"]
+position = Vector2(-5, -56)
+shape = SubResource("WorldBoundaryShape2D_wrm1d")
+
+[node name="v1-Flat" type="Node" parent="Ground"]
+
+[node name="G-00-full" parent="Ground/v1-Flat" instance=ExtResource("2_ldgsr")]
+position = Vector2(383, 127)
+
+[node name="G-00-full3" parent="Ground/v1-Flat" instance=ExtResource("2_ldgsr")]
+position = Vector2(5423, 127)
+
+[node name="G-00-full2" parent="Ground/v1-Flat" instance=ExtResource("2_ldgsr")]
+position = Vector2(-1509, 127)
+
+[node name="G-01-wavy" parent="Ground/v1-Flat" instance=ExtResource("3_ldgsr")]
+position = Vector2(1663, 127)
+
+[node name="G-01-wavy2" parent="Ground/v1-Flat" instance=ExtResource("3_ldgsr")]
+position = Vector2(2943, 127)
+
+[node name="Slingshot" parent="Ground" instance=ExtResource("8_v158k")]
+position = Vector2(-104, 234)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Slingshot"]
+position = Vector2(-89, -81)
+shape = SubResource("WorldBoundaryShape2D_h4fw4")
+
+[node name="Scene1-Bridge" type="Node" parent="."]
+
+[node name="e-platform-a" parent="Scene1-Bridge" instance=ExtResource("4_3dryh")]
+position = Vector2(-902, 67)
+
+[node name="e-platform-a2" parent="Scene1-Bridge/e-platform-a" instance=ExtResource("4_3dryh")]
+position = Vector2(232, -71)
+
+[node name="Platform-Moving-Drift" parent="Scene1-Bridge" instance=ExtResource("5_wowpa")]
+position = Vector2(586, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Scene1-Bridge/Platform-Moving-Drift"]
+libraries = {
+&"": SubResource("AnimationLibrary_1l0tm")
+}
+autoplay = "UpDown"
+
+[node name="E-bridge-water" parent="Scene1-Bridge" instance=ExtResource("2_qxrlw")]
+position = Vector2(-17, 213)
+
+[node name="Scene2-Copter" type="Node" parent="."]
+
+[node name="E-build-apt1" parent="Scene2-Copter" instance=ExtResource("8_rku1e")]
+position = Vector2(4325, 255)
+
+[node name="E-build-apt2" parent="Scene2-Copter" instance=ExtResource("8_rku1e")]
+position = Vector2(4525, 255)
+
+[node name="E-build-apt3" parent="Scene2-Copter" instance=ExtResource("8_rku1e")]
+position = Vector2(4525, -48)
+
+[node name="E-build-apt4" parent="Scene2-Copter" instance=ExtResource("8_rku1e")]
+position = Vector2(5361, 255)
+
+[node name="E-build-apt5" parent="Scene2-Copter" instance=ExtResource("8_rku1e")]
+position = Vector2(5361, -48)
+
+[node name="Copter" parent="Scene2-Copter" instance=ExtResource("9_rfjv2")]
+position = Vector2(4966, -99)
+
+[node name="Orbs" type="Node" parent="."]
+
+[node name="Orb" parent="Orbs" instance=ExtResource("6_1l0tm")]
+position = Vector2(-714, -40)
+
+[node name="Orb2" parent="Orbs" instance=ExtResource("6_1l0tm")]
+position = Vector2(-952, 32)
+
+[node name="Orb-Group-A03" parent="Orbs" instance=ExtResource("7_v158k")]
+visibility_layer = 2
+position = Vector2(-498, -68)
+
+[node name="Orb-Group-A04" parent="Orbs" instance=ExtResource("7_v158k")]
+visibility_layer = 2
+position = Vector2(1, -16)
+
+[node name="Mona" parent="." instance=ExtResource("1_ebmjs")]
+unique_name_in_owner = true
+z_index = 5
+position = Vector2(287, 24)
+script = SubResource("GDScript_ebmjs")
+
+[node name="Camera2D" type="Camera2D" parent="Mona"]
+position = Vector2(-1, -92)
+zoom = Vector2(2, 2)
+limit_bottom = 200
+limit_smoothed = true
+position_smoothing_enabled = true
+
+[node name="FG" type="Node" parent="."]

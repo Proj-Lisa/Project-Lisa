@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bs7j3cgqj0rtp"]
+
+[ext_resource type="Texture2D" uid="uid://dla5uwtv8e8kl" path="res://Assets/Sprites/BGs/BG-CoolLake.jpg" id="1_fqmlx"]
+
+[node name="Bg-lakefrontCity" type="Node2D"]
+
+[node name="Bg-coolLake" type="Sprite2D" parent="."]
+position = Vector2(0, -285)
+texture = ExtResource("1_fqmlx")
+flip_h = true

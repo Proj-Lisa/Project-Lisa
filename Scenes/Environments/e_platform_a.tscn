@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://di6ipybmw2iea"]
+
+[ext_resource type="Texture2D" uid="uid://c2dwteswimbmg" path="res://Assets/Sprites/Environments/Level-Plat-A2.png" id="1_8207c"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8207c"]
+size = Vector2(172, 8)
+
+[node name="e-platform-a" type="AnimatableBody2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_8207c")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_8207c")
+one_way_collision = true
