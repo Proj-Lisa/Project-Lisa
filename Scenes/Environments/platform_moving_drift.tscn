@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwi8vqoj6h6fs"]
+
+[ext_resource type="Texture2D" uid="uid://yh1v7w2coef3" path="res://Assets/Sprites/Environments/Level-Plat-A1.jpg" id="1_rxu2d"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1stmt"]
+size = Vector2(248, 18)
+
+[node name="Platform-Moving-Drift" type="AnimatableBody2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 12)
+scale = Vector2(1, 0.766667)
+texture = ExtResource("1_rxu2d")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 12)
+shape = SubResource("RectangleShape2D_1stmt")
+one_way_collision = true

@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://cf0jur3itmmmf"]
+
+[ext_resource type="Texture2D" uid="uid://cc14k28y5jb5b" path="res://Assets/Sprites/Environments/GroundPlanes/E-Ground-01-Wavy.png" id="1_t6bmw"]
+
+[node name="G-01-wavy" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(640, 64)
+texture = ExtResource("1_t6bmw")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+polygon = PackedVector2Array(0, 128, 1280, 128, 1280, 0, 1118, 0, 1069, 9, 952, 23, 753, 24, 660, 19, 532, 9, 429, 10, 342, 18, 287, 18, 171, 0, 0, 0)

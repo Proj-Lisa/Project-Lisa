@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://dh0u567rm4vi5"]
+
+[ext_resource type="Texture2D" uid="uid://3cxidrxtdydm" path="res://Assets/Sprites/Environments/Levels/Level-Apt.png" id="1_v6xwn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_aex23"]
+size = Vector2(193, 144)
+
+[node name="E-build-apt1" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-2.5, -73)
+shape = SubResource("RectangleShape2D_aex23")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+position = Vector2(0, -99)
+texture = ExtResource("1_v6xwn")

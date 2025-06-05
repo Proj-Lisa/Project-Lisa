@@ -1,0 +1,87 @@
+[gd_scene load_steps=13 format=3 uid="uid://dq1md52vw1p2r"]
+
+[ext_resource type="Texture2D" uid="uid://drdc7c5nyqah6" path="res://Assets/Sprites/Objects/Orb-Tilesheet-01.png" id="1_l85rf"]
+[ext_resource type="Script" uid="uid://b1nnqcxej0sjx" path="res://Scripts/orb.gd" id="1_qe48e"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qe48e"]
+atlas = ExtResource("1_l85rf")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8rqj0"]
+atlas = ExtResource("1_l85rf")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1tjcp"]
+atlas = ExtResource("1_l85rf")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kc7cv"]
+atlas = ExtResource("1_l85rf")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mtbid"]
+atlas = ExtResource("1_l85rf")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o6sjw"]
+atlas = ExtResource("1_l85rf")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8vi3s"]
+atlas = ExtResource("1_l85rf")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_80ahr"]
+atlas = ExtResource("1_l85rf")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ge3d5"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qe48e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8rqj0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1tjcp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kc7cv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mtbid")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o6sjw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8vi3s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_80ahr")
+}],
+"loop": true,
+"name": &"Rotate",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_h8ul0"]
+radius = 5.0
+
+[node name="Orb" type="Area2D"]
+visibility_layer = 4
+collision_mask = 2
+script = ExtResource("1_qe48e")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.48, 0.48)
+sprite_frames = SubResource("SpriteFrames_ge3d5")
+animation = &"Rotate"
+autoplay = "Rotate"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_h8ul0")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
