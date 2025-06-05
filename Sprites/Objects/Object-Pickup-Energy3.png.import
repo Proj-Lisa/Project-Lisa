@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://5qd3tcuygi4e"
-path="res://.godot/imported/Object-Pickup-Energy3.png-d81f1ca4de426e056434d8c546741292.ctex"
+path="res://.godot/imported/Object-Pickup-Energy3.png-33bfc215ee560f0c16d8d28d76d3f95e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Objects/Object-Pickup-Energy3.png"
-dest_files=["res://.godot/imported/Object-Pickup-Energy3.png-d81f1ca4de426e056434d8c546741292.ctex"]
+source_file="res://Sprites/Objects/Object-Pickup-Energy3.png"
+dest_files=["res://.godot/imported/Object-Pickup-Energy3.png-33bfc215ee560f0c16d8d28d76d3f95e.ctex"]
 
 [params]
 

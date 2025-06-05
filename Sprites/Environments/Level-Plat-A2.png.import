@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c2dwteswimbmg"
-path="res://.godot/imported/Level-Plat-A2.png-372c58f450b10f0fe0ac8cd54e0a45ad.ctex"
+path="res://.godot/imported/Level-Plat-A2.png-aab9189e1198eb83280e566680a97f88.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Environments/Level-Plat-A2.png"
-dest_files=["res://.godot/imported/Level-Plat-A2.png-372c58f450b10f0fe0ac8cd54e0a45ad.ctex"]
+source_file="res://Sprites/Environments/Level-Plat-A2.png"
+dest_files=["res://.godot/imported/Level-Plat-A2.png-aab9189e1198eb83280e566680a97f88.ctex"]
 
 [params]
 

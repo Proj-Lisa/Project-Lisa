@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dqvbjj68qupiy"
-path="res://.godot/imported/Level-Mushroom-XS-Wall.png-298f9850808b7b64dbbc4e9731c2c090.ctex"
+path="res://.godot/imported/Level-Mushroom-XS-Wall.png-ce952ccf1b248b7cc706ff8b3b5b7129.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Environments/Levels/Level-Mushroom-XS-Wall.png"
-dest_files=["res://.godot/imported/Level-Mushroom-XS-Wall.png-298f9850808b7b64dbbc4e9731c2c090.ctex"]
+source_file="res://Sprites/Environments/Levels/Level-Mushroom-XS-Wall.png"
+dest_files=["res://.godot/imported/Level-Mushroom-XS-Wall.png-ce952ccf1b248b7cc706ff8b3b5b7129.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bfbwi6kkmi4qe"
-path="res://.godot/imported/Level-BridgeWater.png-be5c44575a9ceeb8b64f6630a95bebd8.ctex"
+path="res://.godot/imported/Level-BridgeWater.png-fe30c3852c3b93796814c321af37689c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Environments/Levels/Level-BridgeWater.png"
-dest_files=["res://.godot/imported/Level-BridgeWater.png-be5c44575a9ceeb8b64f6630a95bebd8.ctex"]
+source_file="res://Sprites/Environments/Levels/Level-BridgeWater.png"
+dest_files=["res://.godot/imported/Level-BridgeWater.png-fe30c3852c3b93796814c321af37689c.ctex"]
 
 [params]
 

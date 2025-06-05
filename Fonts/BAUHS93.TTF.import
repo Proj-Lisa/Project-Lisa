@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://c0g44udvtldsa"
-path="res://.godot/imported/BAUHS93.TTF-f7cd3d72068c2479b26efb0313546a4d.fontdata"
+path="res://.godot/imported/BAUHS93.TTF-41742161a5b37cdc4916213fd78d1ff5.fontdata"
 
 [deps]
 
-source_file="res://Assets/Fonts/BAUHS93.TTF"
-dest_files=["res://.godot/imported/BAUHS93.TTF-f7cd3d72068c2479b26efb0313546a4d.fontdata"]
+source_file="res://Fonts/BAUHS93.TTF"
+dest_files=["res://.godot/imported/BAUHS93.TTF-41742161a5b37cdc4916213fd78d1ff5.fontdata"]
 
 [params]
 

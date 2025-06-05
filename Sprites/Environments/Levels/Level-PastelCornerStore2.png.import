@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bom4uuywbvfuu"
-path="res://.godot/imported/Level-PastelCornerStore2.png-cc227a4cac61518e4ad4803d7af3d122.ctex"
+path="res://.godot/imported/Level-PastelCornerStore2.png-17770eb3c78c0ac2a0ff7607acfcd06a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Environments/Levels/Level-PastelCornerStore2.png"
-dest_files=["res://.godot/imported/Level-PastelCornerStore2.png-cc227a4cac61518e4ad4803d7af3d122.ctex"]
+source_file="res://Sprites/Environments/Levels/Level-PastelCornerStore2.png"
+dest_files=["res://.godot/imported/Level-PastelCornerStore2.png-17770eb3c78c0ac2a0ff7607acfcd06a.ctex"]
 
 [params]
 

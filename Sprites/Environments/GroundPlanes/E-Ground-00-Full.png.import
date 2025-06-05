@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cdltpfl32hlye"
-path="res://.godot/imported/E-Ground-00-Full.png-813770325972b26aa0d12f284aebbb07.ctex"
+path="res://.godot/imported/E-Ground-00-Full.png-c744b4886b8a94e024b0b994b19e780d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Environments/GroundPlanes/E-Ground-00-Full.png"
-dest_files=["res://.godot/imported/E-Ground-00-Full.png-813770325972b26aa0d12f284aebbb07.ctex"]
+source_file="res://Sprites/Environments/GroundPlanes/E-Ground-00-Full.png"
+dest_files=["res://.godot/imported/E-Ground-00-Full.png-c744b4886b8a94e024b0b994b19e780d.ctex"]
 
 [params]
 
