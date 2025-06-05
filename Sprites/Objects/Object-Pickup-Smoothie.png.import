@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bbixfit8lst5c"
-path="res://.godot/imported/Object-Pickup-Smoothie.png-0128007ee2cbdd189a2b37e682a950ff.ctex"
+path="res://.godot/imported/Object-Pickup-Smoothie.png-16c82978944e8f802f3757e44dcd352e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Objects/Object-Pickup-Smoothie.png"
-dest_files=["res://.godot/imported/Object-Pickup-Smoothie.png-0128007ee2cbdd189a2b37e682a950ff.ctex"]
+source_file="res://Sprites/Objects/Object-Pickup-Smoothie.png"
+dest_files=["res://.godot/imported/Object-Pickup-Smoothie.png-16c82978944e8f802f3757e44dcd352e.ctex"]
 
 [params]
 

@@ -7,7 +7,7 @@ valid=false
 
 [deps]
 
-source_file="res://Assets/Sprites/Characters/Mona/C-Jump.PNG"
+source_file="res://Sprites/Characters/Mona/C-Jump.PNG"
 
 [params]
 

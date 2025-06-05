@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://3cxidrxtdydm"
-path="res://.godot/imported/Level-Apt.png-ddf97a04eccca7fdde5005eb38a06ab5.ctex"
+path="res://.godot/imported/Level-Apt.png-ee7ed2969f6d330b28e4e0118b5111cd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Environments/Levels/Level-Apt.png"
-dest_files=["res://.godot/imported/Level-Apt.png-ddf97a04eccca7fdde5005eb38a06ab5.ctex"]
+source_file="res://Sprites/Environments/Levels/Level-Apt.png"
+dest_files=["res://.godot/imported/Level-Apt.png-ee7ed2969f6d330b28e4e0118b5111cd.ctex"]
 
 [params]
 

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b15wuxr5sshgh"
-path="res://.godot/imported/BG-YellowStreet.jpg-3c330e7441c85aa9c470c1ff36a15c5f.ctex"
+path="res://.godot/imported/BG-YellowStreet.jpg-fcb024c6f75e4441f749b357b3123eca.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/BGs/BG-YellowStreet.jpg"
-dest_files=["res://.godot/imported/BG-YellowStreet.jpg-3c330e7441c85aa9c470c1ff36a15c5f.ctex"]
+source_file="res://Sprites/BGs/BG-YellowStreet.jpg"
+dest_files=["res://.godot/imported/BG-YellowStreet.jpg-fcb024c6f75e4441f749b357b3123eca.ctex"]
 
 [params]
 

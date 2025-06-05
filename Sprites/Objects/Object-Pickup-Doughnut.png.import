@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dceycp0agqgjc"
-path="res://.godot/imported/Object-Pickup-Doughnut.png-693b4f02d90ac8ce4dbd999a5ce5d8a1.ctex"
+path="res://.godot/imported/Object-Pickup-Doughnut.png-f012ec2818eefac96baa043c42974f7b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Objects/Object-Pickup-Doughnut.png"
-dest_files=["res://.godot/imported/Object-Pickup-Doughnut.png-693b4f02d90ac8ce4dbd999a5ce5d8a1.ctex"]
+source_file="res://Sprites/Objects/Object-Pickup-Doughnut.png"
+dest_files=["res://.godot/imported/Object-Pickup-Doughnut.png-f012ec2818eefac96baa043c42974f7b.ctex"]
 
 [params]
 

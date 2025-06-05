@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d1dhwqpi6kfhk"
-path="res://.godot/imported/Level-Pole.png-c7528d75838d1bdf30c7869469b74c17.ctex"
+path="res://.godot/imported/Level-Pole.png-59b39c0853254497df64a9ad79f4dea6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Environments/Level-Pole.png"
-dest_files=["res://.godot/imported/Level-Pole.png-c7528d75838d1bdf30c7869469b74c17.ctex"]
+source_file="res://Sprites/Environments/Level-Pole.png"
+dest_files=["res://.godot/imported/Level-Pole.png-59b39c0853254497df64a9ad79f4dea6.ctex"]
 
 [params]
 
