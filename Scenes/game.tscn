@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bjxaqr3y16g2c"]
+[gd_scene load_steps=21 format=3 uid="uid://bjxaqr3y16g2c"]
 
 [ext_resource type="PackedScene" uid="uid://4byaim2dyifn" path="res://Scenes/player.tscn" id="1_ebmjs"]
 [ext_resource type="PackedScene" uid="uid://bt2hpyh1oycvy" path="res://Scenes/BG/BG-LakeFrontWrap.tscn" id="1_h4fw4"]
@@ -6,13 +6,14 @@
 [ext_resource type="PackedScene" uid="uid://c6h5ot0h77gm3" path="res://Scenes/Environments/e-bridge-water.tscn" id="2_qxrlw"]
 [ext_resource type="PackedScene" uid="uid://cf0jur3itmmmf" path="res://Scenes/Environments/Ground/g-01-wavy.tscn" id="3_ldgsr"]
 [ext_resource type="PackedScene" uid="uid://di6ipybmw2iea" path="res://Scenes/Environments/e_platform_a.tscn" id="4_3dryh"]
-[ext_resource type="PackedScene" uid="uid://ce2fc1h8f532c" path="res://Scenes/Environments/wrapper.tscn" id="5_rfjv2"]
+[ext_resource type="PackedScene" path="res://Scenes/Environments/wrapper.tscn" id="5_rfjv2"]
 [ext_resource type="PackedScene" uid="uid://bwi8vqoj6h6fs" path="res://Scenes/Environments/platform_moving_drift.tscn" id="5_wowpa"]
 [ext_resource type="PackedScene" uid="uid://dq1md52vw1p2r" path="res://Scenes/Pickups/orb.tscn" id="6_1l0tm"]
 [ext_resource type="PackedScene" uid="uid://dr1biwdnr5s8m" path="res://Scenes/Pickups/orb_group_a_03.tscn" id="7_v158k"]
 [ext_resource type="PackedScene" uid="uid://dh0u567rm4vi5" path="res://Scenes/Environments/e-build-apt1.tscn" id="8_rku1e"]
 [ext_resource type="PackedScene" uid="uid://cfgw14us7s7xe" path="res://Scenes/Environments/slingshot.tscn" id="8_v158k"]
 [ext_resource type="PackedScene" uid="uid://cv2e4d63823nk" path="res://Scenes/Enemies/copter.tscn" id="9_rfjv2"]
+[ext_resource type="PackedScene" uid="uid://c4qs1178hbb1y" path="res://Scenes/Pickups/iCoffee.tscn" id="11_1phco"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_wrm1d"]
 distance = -259.0
@@ -157,10 +158,10 @@ func _physics_process(delta: float) -> void:
 	
 	if Input.is_action_pressed(\"move_Left\") and velocity.x > brakeSpeed:
 		isAbruptStop = true
-		print(\"isAbruptStop\")
+		#print(\"isAbruptStop\")
 	elif Input.is_action_pressed(\"move_Right\") and velocity.x < (brakeSpeed * -1):
 		isAbruptStop = true
-		print(\"isAbruptStop\")
+		#print(\"isAbruptStop\")
 	else:
 		isAbruptStop = false
 	
@@ -193,7 +194,7 @@ func _physics_process(delta: float) -> void:
 		if not goingUp:
 			if smoothingTimer > smoothingTimerMax:
 				monaSprite.play(\"D-Fall\")
-				print(\"fall\")
+				#print(\"fall\")
 			else:
 				pass
 		else:
@@ -330,19 +331,29 @@ position = Vector2(5361, -48)
 [node name="Copter" parent="Scene2-Copter" instance=ExtResource("9_rfjv2")]
 position = Vector2(4966, -99)
 
-[node name="Orbs" type="Node" parent="."]
+[node name="Pickups" type="Node" parent="."]
 
-[node name="Orb" parent="Orbs" instance=ExtResource("6_1l0tm")]
+[node name="Objectives" type="Node" parent="Pickups"]
+
+[node name="iCoffee" parent="Pickups/Objectives" instance=ExtResource("11_1phco")]
+position = Vector2(574, -75)
+
+[node name="iCoffee2" parent="Pickups/Objectives" instance=ExtResource("11_1phco")]
+position = Vector2(-1381, 55)
+
+[node name="Orbs" type="Node" parent="Pickups"]
+
+[node name="Orb" parent="Pickups/Orbs" instance=ExtResource("6_1l0tm")]
 position = Vector2(-679, -40)
 
-[node name="Orb2" parent="Orbs" instance=ExtResource("6_1l0tm")]
+[node name="Orb2" parent="Pickups/Orbs" instance=ExtResource("6_1l0tm")]
 position = Vector2(-983, 32)
 
-[node name="Orb-Group-A03" parent="Orbs" instance=ExtResource("7_v158k")]
+[node name="Orb-Group-A03" parent="Pickups/Orbs" instance=ExtResource("7_v158k")]
 visibility_layer = 2
 position = Vector2(-509, -99)
 
-[node name="Orb-Group-A04" parent="Orbs" instance=ExtResource("7_v158k")]
+[node name="Orb-Group-A04" parent="Pickups/Orbs" instance=ExtResource("7_v158k")]
 visibility_layer = 2
 position = Vector2(1, -16)
 
