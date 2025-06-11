@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bjxaqr3y16g2c"]
+[gd_scene load_steps=20 format=3 uid="uid://bjxaqr3y16g2c"]
 
 [ext_resource type="PackedScene" uid="uid://4byaim2dyifn" path="res://Scenes/player.tscn" id="1_ebmjs"]
 [ext_resource type="PackedScene" uid="uid://bt2hpyh1oycvy" path="res://Scenes/BG/BG-LakeFrontWrap.tscn" id="1_h4fw4"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c6h5ot0h77gm3" path="res://Scenes/Environments/e-bridge-water.tscn" id="2_qxrlw"]
 [ext_resource type="PackedScene" uid="uid://cf0jur3itmmmf" path="res://Scenes/Environments/Ground/g-01-wavy.tscn" id="3_ldgsr"]
 [ext_resource type="PackedScene" uid="uid://di6ipybmw2iea" path="res://Scenes/Environments/e_platform_a.tscn" id="4_3dryh"]
+[ext_resource type="PackedScene" uid="uid://ce2fc1h8f532c" path="res://Scenes/Environments/wrapper.tscn" id="5_rfjv2"]
 [ext_resource type="PackedScene" uid="uid://bwi8vqoj6h6fs" path="res://Scenes/Environments/platform_moving_drift.tscn" id="5_wowpa"]
 [ext_resource type="PackedScene" uid="uid://dq1md52vw1p2r" path="res://Scenes/Pickups/orb.tscn" id="6_1l0tm"]
 [ext_resource type="PackedScene" uid="uid://dr1biwdnr5s8m" path="res://Scenes/Pickups/orb_group_a_03.tscn" id="7_v158k"]
@@ -111,7 +112,11 @@ var isAbruptStop = false #used for brake conditional and faster turn
 var brakeTimer = 0		#used to lock braking
 const END_BRAKING = 10	#frames braking locks Mona
 
-@onready var monaSprite = $MonaSprite2D
+@onready var monaSprite = $MonaSprite2D #for animations
+
+@onready var wrapLeftSeam = $\"../Ground/WrapperLeft\" #for screenwrapping
+@onready var wrapRightSeam = $\"../Ground/WrapperRight\"
+@onready var cameraMona = $CameraMona
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -222,8 +227,21 @@ func _physics_process(delta: float) -> void:
 		elif direction < 0:
 			velocity.x = maxSpeed * -1
 	
-
+	#screen wrap based on direction
+	screen_wrap()
+	
 	move_and_slide()
+
+#functions called to wrap Mona in the level, at the safe zone where stuff doesn't move around...
+func screen_wrap():
+	cameraMona.limit_smoothed = false #disable camera actions for a more seamless snap
+	cameraMona.position_smoothing_enabled = false
+	
+	position.x = wrapf(position.x,wrapLeftSeam.position.x,wrapRightSeam.position.x) #move Mona b/w boundaries
+	#cameraMona.position.x = wrapf(cameraMona.position.x,wrapLeftSeam.position.x,wrapRightSeam.position.x)
+	
+	cameraMona.limit_smoothed = true #re-enable camera smoothing
+	cameraMona.position_smoothing_enabled = true
 "
 
 [node name="Game" type="Node2D"]
@@ -264,6 +282,13 @@ position = Vector2(-104, 234)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground/Slingshot"]
 position = Vector2(-89, -81)
 shape = SubResource("WorldBoundaryShape2D_h4fw4")
+
+[node name="WrapperLeft" parent="Ground" instance=ExtResource("5_rfjv2")]
+position = Vector2(-1430, 304)
+collision_mask = 2
+
+[node name="WrapperRight" parent="Ground" instance=ExtResource("5_rfjv2")]
+position = Vector2(2571, 310)
 
 [node name="Scene1-Bridge" type="Node" parent="."]
 
@@ -327,11 +352,12 @@ z_index = 5
 position = Vector2(287, 24)
 script = SubResource("GDScript_ebmjs")
 
-[node name="Camera2D" type="Camera2D" parent="Mona"]
+[node name="CameraMona" type="Camera2D" parent="Mona"]
 position = Vector2(-1, -92)
 zoom = Vector2(2, 2)
 limit_bottom = 200
 limit_smoothed = true
 position_smoothing_enabled = true
+position_smoothing_speed = 10.0
 
 [node name="FG" type="Node" parent="."]

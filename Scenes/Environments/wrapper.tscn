@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://ce2fc1h8f532c"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_vajte"]
+
+[node name="Wrapper" type="Area2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("WorldBoundaryShape2D_vajte")
+disabled = true
