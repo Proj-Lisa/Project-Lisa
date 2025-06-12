@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://dq1md52vw1p2r"]
 
-[ext_resource type="Texture2D" uid="uid://drdc7c5nyqah6" path="res://Assets/Sprites/Objects/Orb-Tilesheet-01.png" id="1_l85rf"]
+[ext_resource type="Texture2D" uid="uid://drdc7c5nyqah6" path="res://Sprites/Objects/Orb-Tilesheet-01.png" id="1_l85rf"]
 [ext_resource type="Script" uid="uid://b1nnqcxej0sjx" path="res://Scripts/orb.gd" id="1_qe48e"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_qe48e"]
