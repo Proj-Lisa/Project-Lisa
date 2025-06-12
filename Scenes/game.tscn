@@ -1,12 +1,14 @@
-[gd_scene load_steps=21 format=3 uid="uid://bjxaqr3y16g2c"]
+[gd_scene load_steps=24 format=3 uid="uid://bjxaqr3y16g2c"]
 
 [ext_resource type="PackedScene" uid="uid://4byaim2dyifn" path="res://Scenes/player.tscn" id="1_ebmjs"]
 [ext_resource type="PackedScene" uid="uid://bt2hpyh1oycvy" path="res://Scenes/BG/BG-LakeFrontWrap.tscn" id="1_h4fw4"]
+[ext_resource type="Script" uid="uid://bnwjwxvppnejy" path="res://Scenes/game_manager.gd" id="1_nnt18"]
+[ext_resource type="PackedScene" uid="uid://ciqigctmduu0p" path="res://Scenes/Text/txt_body.tscn" id="2_ewbju"]
 [ext_resource type="PackedScene" uid="uid://dltvqyrf1ejj4" path="res://Scenes/Environments/Ground/g-00-full.tscn" id="2_ldgsr"]
 [ext_resource type="PackedScene" uid="uid://c6h5ot0h77gm3" path="res://Scenes/Environments/e-bridge-water.tscn" id="2_qxrlw"]
 [ext_resource type="PackedScene" uid="uid://cf0jur3itmmmf" path="res://Scenes/Environments/Ground/g-01-wavy.tscn" id="3_ldgsr"]
 [ext_resource type="PackedScene" uid="uid://di6ipybmw2iea" path="res://Scenes/Environments/e_platform_a.tscn" id="4_3dryh"]
-[ext_resource type="PackedScene" path="res://Scenes/Environments/wrapper.tscn" id="5_rfjv2"]
+[ext_resource type="PackedScene" uid="uid://ce2fc1h8f532c" path="res://Scenes/Environments/wrapper.tscn" id="5_rfjv2"]
 [ext_resource type="PackedScene" uid="uid://bwi8vqoj6h6fs" path="res://Scenes/Environments/platform_moving_drift.tscn" id="5_wowpa"]
 [ext_resource type="PackedScene" uid="uid://dq1md52vw1p2r" path="res://Scenes/Pickups/orb.tscn" id="6_1l0tm"]
 [ext_resource type="PackedScene" uid="uid://dr1biwdnr5s8m" path="res://Scenes/Pickups/orb_group_a_03.tscn" id="7_v158k"]
@@ -14,6 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://cfgw14us7s7xe" path="res://Scenes/Environments/slingshot.tscn" id="8_v158k"]
 [ext_resource type="PackedScene" uid="uid://cv2e4d63823nk" path="res://Scenes/Enemies/copter.tscn" id="9_rfjv2"]
 [ext_resource type="PackedScene" uid="uid://c4qs1178hbb1y" path="res://Scenes/Pickups/iCoffee.tscn" id="11_1phco"]
+[ext_resource type="PackedScene" uid="uid://d0yqac6qhs5mb" path="res://Scenes/Text/txt_header.tscn" id="16_ewbju"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_wrm1d"]
 distance = -259.0
@@ -118,6 +121,9 @@ const END_BRAKING = 10	#frames braking locks Mona
 @onready var wrapLeftSeam = $\"../Ground/WrapperLeft\" #for screenwrapping
 @onready var wrapRightSeam = $\"../Ground/WrapperRight\"
 @onready var cameraMona = $CameraMona
+
+#create camera Zoom and xOffset based on speed
+#also need hair at some point, so may as well program the vector fn and base it on that
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -372,3 +378,19 @@ position_smoothing_enabled = true
 position_smoothing_speed = 10.0
 
 [node name="FG" type="Node" parent="."]
+
+[node name="txtHeader" parent="FG" instance=ExtResource("16_ewbju")]
+offset_left = 316.0
+offset_top = -63.0
+offset_right = 316.0
+offset_bottom = -63.0
+
+[node name="Game Manager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("1_nnt18")
+
+[node name="txtCollect1" parent="Game Manager" instance=ExtResource("2_ewbju")]
+offset_left = 357.0
+offset_top = -31.0
+offset_right = 693.0
+offset_bottom = -8.0
