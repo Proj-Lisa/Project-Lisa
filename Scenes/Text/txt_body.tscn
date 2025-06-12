@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://ciqigctmduu0p"]
+
+[ext_resource type="FontFile" uid="uid://gwkqxnmulfqp" path="res://Fonts/ARLRDBD.TTF" id="1_6e8y1"]
+
+[node name="txtBody" type="Label"]
+offset_right = 363.0
+offset_bottom = 20.0
+theme_override_fonts/font = ExtResource("1_6e8y1")
+theme_override_font_sizes/font_size = 16
+text = "Objective Text"

@@ -1,17 +1,23 @@
-[gd_scene load_steps=19 format=3 uid="uid://bjxaqr3y16g2c"]
+[gd_scene load_steps=25 format=4 uid="uid://bjxaqr3y16g2c"]
 
 [ext_resource type="PackedScene" uid="uid://4byaim2dyifn" path="res://Scenes/player.tscn" id="1_ebmjs"]
 [ext_resource type="PackedScene" uid="uid://bt2hpyh1oycvy" path="res://Scenes/BG/BG-LakeFrontWrap.tscn" id="1_h4fw4"]
+[ext_resource type="Script" uid="uid://bnwjwxvppnejy" path="res://Scenes/game_manager.gd" id="1_nnt18"]
+[ext_resource type="PackedScene" uid="uid://ciqigctmduu0p" path="res://Scenes/Text/txt_body.tscn" id="2_ewbju"]
 [ext_resource type="PackedScene" uid="uid://dltvqyrf1ejj4" path="res://Scenes/Environments/Ground/g-00-full.tscn" id="2_ldgsr"]
 [ext_resource type="PackedScene" uid="uid://c6h5ot0h77gm3" path="res://Scenes/Environments/e-bridge-water.tscn" id="2_qxrlw"]
 [ext_resource type="PackedScene" uid="uid://cf0jur3itmmmf" path="res://Scenes/Environments/Ground/g-01-wavy.tscn" id="3_ldgsr"]
 [ext_resource type="PackedScene" uid="uid://di6ipybmw2iea" path="res://Scenes/Environments/e_platform_a.tscn" id="4_3dryh"]
+[ext_resource type="PackedScene" path="res://Scenes/Environments/wrapper.tscn" id="5_rfjv2"]
 [ext_resource type="PackedScene" uid="uid://bwi8vqoj6h6fs" path="res://Scenes/Environments/platform_moving_drift.tscn" id="5_wowpa"]
 [ext_resource type="PackedScene" uid="uid://dq1md52vw1p2r" path="res://Scenes/Pickups/orb.tscn" id="6_1l0tm"]
+[ext_resource type="PackedScene" uid="uid://bwfhcwustp38" path="res://Scenes/Environments/TEMP_tile_map_layer.tscn" id="6_85qyi"]
 [ext_resource type="PackedScene" uid="uid://dr1biwdnr5s8m" path="res://Scenes/Pickups/orb_group_a_03.tscn" id="7_v158k"]
 [ext_resource type="PackedScene" uid="uid://dh0u567rm4vi5" path="res://Scenes/Environments/e-build-apt1.tscn" id="8_rku1e"]
 [ext_resource type="PackedScene" uid="uid://cfgw14us7s7xe" path="res://Scenes/Environments/slingshot.tscn" id="8_v158k"]
 [ext_resource type="PackedScene" uid="uid://cv2e4d63823nk" path="res://Scenes/Enemies/copter.tscn" id="9_rfjv2"]
+[ext_resource type="PackedScene" uid="uid://c4qs1178hbb1y" path="res://Scenes/Pickups/iCoffee.tscn" id="11_1phco"]
+[ext_resource type="PackedScene" uid="uid://d0yqac6qhs5mb" path="res://Scenes/Text/txt_header.tscn" id="16_ewbju"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_wrm1d"]
 distance = -259.0
@@ -85,19 +91,19 @@ const ACCEL_AIR = 12	#less control in the air
 const ACCEL_JUMP = -120
 const MIN_SPEED_AFTER_TURN = 90 #jumpstart to get out of lazy/ice-sliding turns
 
-const maxSpeed = 800
-const runSpeed3 = 700
-const brakeSpeed = 300
-const runSpeed2 = 240
+const SPEED_MAX = 800
+const SPEED_3 = 700
+const SPEED_THAT_BRAKES = 300
+const SPEED_2 = 240
 
 const JUMP_VELOCITY = -600	#negative y goes up
 const JUMP_VELOCITY_SHORT = -400
-const maxJump = 520
+const MAX_JUMP = 520
 const GRAVITY_FACTOR = 1.8	#increases gravity for faster-fall responsiveness
 var disableJump = false		#used to prevent jumping while in the air and other states
 
-const hangtimeWINDOW = 10
-const hangtimeSPEED = 0.08
+const HANGTIME_WINDOW = 10
+const HANGTIME_SPEED = 0.08
 var hangtime = 1 #normally no effect on velocity, but use a move_toward 0 while holding Jump, release to reset
 var hangtimeStart = false
 
@@ -105,13 +111,20 @@ var DECEL = 80			#used to slow down
 var DECEL_SLIDE = 16	#for isAbrupt
 var goingUp = true		#vertical direction, fall or jump animation
 var smoothingTimer = 0	#prevents flashing of fall sprite when running over little bumps
-const smoothingTimerMax = 7
+const SMOOTHING_RUN_MARGIN = 7
 
 var isAbruptStop = false #used for brake conditional and faster turn
 var brakeTimer = 0		#used to lock braking
 const END_BRAKING = 10	#frames braking locks Mona
 
-@onready var monaSprite = $MonaSprite2D
+@onready var monaSprite = $MonaSprite2D #for animations
+
+@onready var wrapLeftSeam = $\"../Ground/WrapperLeft\" #for screenwrapping
+@onready var wrapRightSeam = $\"../Ground/WrapperRight\"
+@onready var cameraMona = $CameraMona
+
+#create camera Zoom and xOffset based on speed
+#also need hair at some point, so may as well program the vector fn and base it on that
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
@@ -126,17 +139,17 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed(\"jump\") and disableJump == false:
 		velocity.y += ACCEL_JUMP
 		#print(\"jump\")
-	if abs(velocity.y) > maxJump or Input.is_action_just_released(\"jump\"):
+	if abs(velocity.y) > MAX_JUMP or Input.is_action_just_released(\"jump\"):
 		disableJump = true
 	if is_on_floor() and not Input.is_action_pressed(\"jump\"):
 		disableJump = false
 
 	#if still holding jump at the apex, then sustain the jump for a brief moment, scaled with horizontal speed
-	if velocity.y > (hangtimeWINDOW * -1) and velocity.y < hangtimeWINDOW and Input.is_action_pressed(\"jump\") and hangtimeStart == false:
+	if velocity.y > (HANGTIME_WINDOW * -1) and velocity.y < HANGTIME_WINDOW and Input.is_action_pressed(\"jump\") and hangtimeStart == false:
 		hangtimeStart = true
 		hangtime = 0
 	if hangtimeStart == true and Input.is_action_pressed(\"jump\"): #hangtime decays while held
-		hangtime = move_toward(hangtime, 1, hangtimeSPEED)
+		hangtime = move_toward(hangtime, 1, HANGTIME_SPEED)
 		#print(\"hangtime!\")
 	else: #let go, reset
 		hangtimeStart = false
@@ -150,12 +163,12 @@ func _physics_process(delta: float) -> void:
 	else:
 		goingUp = true
 	
-	if Input.is_action_pressed(\"move_Left\") and velocity.x > brakeSpeed:
+	if Input.is_action_pressed(\"move_Left\") and velocity.x > SPEED_THAT_BRAKES:
 		isAbruptStop = true
-		print(\"isAbruptStop\")
-	elif Input.is_action_pressed(\"move_Right\") and velocity.x < (brakeSpeed * -1):
+		#print(\"isAbruptStop\")
+	elif Input.is_action_pressed(\"move_Right\") and velocity.x < (SPEED_THAT_BRAKES * -1):
 		isAbruptStop = true
-		print(\"isAbruptStop\")
+		#print(\"isAbruptStop\")
 	else:
 		isAbruptStop = false
 	
@@ -175,9 +188,9 @@ func _physics_process(delta: float) -> void:
 			monaSprite.play(\"A-Idle\")
 		else: #different run speeds
 			if not isAbruptStop: #brake animation has priority over which speed would play
-				if abs(velocity.x) > runSpeed3:
+				if abs(velocity.x) > SPEED_3:
 					monaSprite.play(\"B-Run3\")
-				elif abs(velocity.x) > runSpeed2:
+				elif abs(velocity.x) > SPEED_2:
 					monaSprite.play(\"B-Run2\")
 				else:
 					monaSprite.play(\"B-Run1\")
@@ -186,9 +199,9 @@ func _physics_process(delta: float) -> void:
 	else:
 		smoothingTimer += 1
 		if not goingUp:
-			if smoothingTimer > smoothingTimerMax:
+			if smoothingTimer > SMOOTHING_RUN_MARGIN:
 				monaSprite.play(\"D-Fall\")
-				print(\"fall\")
+				#print(\"fall\")
 			else:
 				pass
 		else:
@@ -216,14 +229,27 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, DECEL) #last variable was SPEED when linear
 	
 	#cap speed in both directions, but don't make idle slide forever
-	if abs(velocity.x) > maxSpeed:
+	if abs(velocity.x) > SPEED_MAX:
 		if direction > 0:
-			velocity.x = maxSpeed
+			velocity.x = SPEED_MAX
 		elif direction < 0:
-			velocity.x = maxSpeed * -1
+			velocity.x = SPEED_MAX * -1
 	
-
+	#screen wrap based on direction
+	screen_wrap()
+	
 	move_and_slide()
+
+#functions called to wrap Mona in the level, at the safe zone where stuff doesn't move around...
+func screen_wrap():
+	cameraMona.limit_smoothed = false #disable camera actions for a more seamless snap
+	cameraMona.position_smoothing_enabled = false
+	
+	position.x = wrapf(position.x,wrapLeftSeam.position.x,wrapRightSeam.position.x) #move Mona b/w boundaries
+	#cameraMona.position.x = wrapf(cameraMona.position.x,wrapLeftSeam.position.x,wrapRightSeam.position.x)
+	
+	cameraMona.limit_smoothed = true #re-enable camera smoothing
+	cameraMona.position_smoothing_enabled = true
 "
 
 [node name="Game" type="Node2D"]
@@ -265,6 +291,16 @@ position = Vector2(-104, 234)
 position = Vector2(-89, -81)
 shape = SubResource("WorldBoundaryShape2D_h4fw4")
 
+[node name="WrapperLeft" parent="Ground" instance=ExtResource("5_rfjv2")]
+position = Vector2(-1430, 304)
+collision_mask = 2
+
+[node name="WrapperRight" parent="Ground" instance=ExtResource("5_rfjv2")]
+position = Vector2(3741, 310)
+
+[node name="TileMapLayer" parent="Ground" instance=ExtResource("6_85qyi")]
+tile_map_data = PackedByteArray("AAARAAIAAAACAAQAAAASAAIAAAACAAQAAAATAAIAAAACAAQAAAAUAAIAAAACAAQAAAAYAAIAAAACAAQAAAAZAAIAAAACAAQAAAAaAAIAAAACAAQAAAAbAAIAAAACAAQAAAAcAAIAAAACAAQAAAAdAAIAAAACAAQAAABGAAcAAAADAAMAABBJAAYAAAADAAMAABBMAAUAAAADAAMAABBPAAQAAAADAAMAABBSAAMAAAADAAMAABBUAAIAAAADAAcAABBVAAEAAAADAAcAABBXAAAAAAAAAAIAABBaAP//AAAAAAIAABBcAP//AAAEAAgAAABdAP//AAAEAAgAAABfAP//AAAAAAIAAABiAAAAAAAAAAIAAABlAAEAAAAAAAIAAABoAAIAAAAAAAIAAABrAAMAAAAAAAIAAABuAAQAAAAAAAIAAABxAAUAAAAAAAIAAAB0AAYAAAAAAAIAAAB3AAcAAAAAAAIAAAA=")
+
 [node name="Scene1-Bridge" type="Node" parent="."]
 
 [node name="e-platform-a" parent="Scene1-Bridge" instance=ExtResource("4_3dryh")]
@@ -305,19 +341,29 @@ position = Vector2(5361, -48)
 [node name="Copter" parent="Scene2-Copter" instance=ExtResource("9_rfjv2")]
 position = Vector2(4966, -99)
 
-[node name="Orbs" type="Node" parent="."]
+[node name="Pickups" type="Node" parent="."]
 
-[node name="Orb" parent="Orbs" instance=ExtResource("6_1l0tm")]
+[node name="Objectives" type="Node" parent="Pickups"]
+
+[node name="iCoffee" parent="Pickups/Objectives" instance=ExtResource("11_1phco")]
+position = Vector2(574, -75)
+
+[node name="iCoffee2" parent="Pickups/Objectives" instance=ExtResource("11_1phco")]
+position = Vector2(-1381, 55)
+
+[node name="Orbs" type="Node" parent="Pickups"]
+
+[node name="Orb" parent="Pickups/Orbs" instance=ExtResource("6_1l0tm")]
 position = Vector2(-679, -40)
 
-[node name="Orb2" parent="Orbs" instance=ExtResource("6_1l0tm")]
+[node name="Orb2" parent="Pickups/Orbs" instance=ExtResource("6_1l0tm")]
 position = Vector2(-983, 32)
 
-[node name="Orb-Group-A03" parent="Orbs" instance=ExtResource("7_v158k")]
+[node name="Orb-Group-A03" parent="Pickups/Orbs" instance=ExtResource("7_v158k")]
 visibility_layer = 2
 position = Vector2(-509, -99)
 
-[node name="Orb-Group-A04" parent="Orbs" instance=ExtResource("7_v158k")]
+[node name="Orb-Group-A04" parent="Pickups/Orbs" instance=ExtResource("7_v158k")]
 visibility_layer = 2
 position = Vector2(1, -16)
 
@@ -327,11 +373,28 @@ z_index = 5
 position = Vector2(287, 24)
 script = SubResource("GDScript_ebmjs")
 
-[node name="Camera2D" type="Camera2D" parent="Mona"]
+[node name="CameraMona" type="Camera2D" parent="Mona"]
 position = Vector2(-1, -92)
 zoom = Vector2(2, 2)
 limit_bottom = 200
 limit_smoothed = true
 position_smoothing_enabled = true
+position_smoothing_speed = 10.0
 
 [node name="FG" type="Node" parent="."]
+
+[node name="txtHeader" parent="FG" instance=ExtResource("16_ewbju")]
+offset_left = 316.0
+offset_top = -63.0
+offset_right = 316.0
+offset_bottom = -63.0
+
+[node name="Game Manager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("1_nnt18")
+
+[node name="txtCollect1" parent="Game Manager" instance=ExtResource("2_ewbju")]
+offset_left = 357.0
+offset_top = -31.0
+offset_right = 693.0
+offset_bottom = -8.0

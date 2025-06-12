@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dltvqyrf1ejj4"]
 
-[ext_resource type="Texture2D" uid="uid://cdltpfl32hlye" path="res://Assets/Sprites/Environments/GroundPlanes/E-Ground-00-Full.png" id="1_21dtv"]
+[ext_resource type="Texture2D" uid="uid://cdltpfl32hlye" path="res://Sprites/Environments/GroundPlanes/E-Ground-00-Full.png" id="1_21dtv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_org7b"]
 size = Vector2(1280, 128)
