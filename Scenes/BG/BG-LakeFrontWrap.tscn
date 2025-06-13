@@ -31,24 +31,3 @@ position = Vector2(7500, 0)
 
 [node name="Bg-lakefrontCity9" parent="." instance=ExtResource("1_r6gkf")]
 position = Vector2(8500, 0)
-
-[node name="Bg-lakefrontCity10" parent="." instance=ExtResource("2_lr6k6")]
-position = Vector2(9500, 0)
-
-[node name="Bg-lakefrontCity11" parent="." instance=ExtResource("1_r6gkf")]
-position = Vector2(10500, 0)
-
-[node name="Bg-lakefrontCity12" parent="." instance=ExtResource("2_lr6k6")]
-position = Vector2(11500, 0)
-
-[node name="Bg-lakefrontCity13" parent="." instance=ExtResource("1_r6gkf")]
-position = Vector2(12500, 0)
-
-[node name="Bg-lakefrontCity14" parent="." instance=ExtResource("2_lr6k6")]
-position = Vector2(13500, 0)
-
-[node name="Bg-lakefrontCity15" parent="." instance=ExtResource("1_r6gkf")]
-position = Vector2(14500, 0)
-
-[node name="Bg-lakefrontCity16" parent="." instance=ExtResource("2_lr6k6")]
-position = Vector2(15500, 0)
