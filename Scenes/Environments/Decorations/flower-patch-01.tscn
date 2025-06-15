@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://btkf416y6qa8b"]
+
+[ext_resource type="PackedScene" uid="uid://dntctgxlpf7ye" path="res://Scenes/Environments/Decorations/l-flower-01.tscn" id="1_k6ita"]
+
+[node name="Flower-patch-01" type="Node2D"]
+
+[node name="L-flower-01" parent="." instance=ExtResource("1_k6ita")]
+
+[node name="L-flower-02" parent="." instance=ExtResource("1_k6ita")]
+position = Vector2(32, 0)
+
+[node name="L-flower-03" parent="." instance=ExtResource("1_k6ita")]
+position = Vector2(-33, 0)

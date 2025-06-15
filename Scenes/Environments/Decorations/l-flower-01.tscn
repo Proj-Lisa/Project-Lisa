@@ -1,0 +1,65 @@
+[gd_scene load_steps=9 format=3 uid="uid://dntctgxlpf7ye"]
+
+[ext_resource type="Script" uid="uid://c1iuv6unq1axe" path="res://Scripts/l_flower_01.gd" id="1_esffj"]
+[ext_resource type="Texture2D" uid="uid://c2r3wriunmi4j" path="res://Sprites/Environments/Enviro-TilesheetMix-1.png" id="1_nflsq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_esffj"]
+atlas = ExtResource("1_nflsq")
+region = Rect2(128, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_esmes"]
+atlas = ExtResource("1_nflsq")
+region = Rect2(128, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u0qkt"]
+atlas = ExtResource("1_nflsq")
+region = Rect2(64, 192, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s5paq"]
+atlas = ExtResource("1_nflsq")
+region = Rect2(0, 192, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_n7u8s"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_esffj")
+}],
+"loop": true,
+"name": &"1-Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_esmes")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u0qkt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s5paq")
+}],
+"loop": false,
+"name": &"2-Bloom",
+"speed": 9.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cbou5"]
+size = Vector2(3, 14)
+
+[node name="L-flower-01" type="Area2D"]
+visibility_layer = 2
+collision_mask = 2
+script = ExtResource("1_esffj")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -32)
+sprite_frames = SubResource("SpriteFrames_n7u8s")
+animation = &"2-Bloom"
+autoplay = "1-Idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.5, -8)
+shape = SubResource("RectangleShape2D_cbou5")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

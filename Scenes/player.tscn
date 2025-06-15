@@ -1,6 +1,7 @@
-[gd_scene load_steps=14 format=3 uid="uid://4byaim2dyifn"]
+[gd_scene load_steps=23 format=3 uid="uid://4byaim2dyifn"]
 
 [ext_resource type="Texture2D" uid="uid://davwwog331182" path="res://Sprites/Characters/Mona/aaMonaSprites.png" id="1_v0iea"]
+[ext_resource type="Texture2D" uid="uid://b8awhab8b4172" path="res://Sprites/Characters/Mona/abMonaV2Temp.png" id="2_cvnsp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cvnsp"]
 atlas = ExtResource("1_v0iea")
@@ -41,6 +42,38 @@ region = Rect2(384, 0, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_f1ek2"]
 atlas = ExtResource("1_v0iea")
 region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gymyn"]
+atlas = ExtResource("2_cvnsp")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pu2lt"]
+atlas = ExtResource("2_cvnsp")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ukyrk"]
+atlas = ExtResource("2_cvnsp")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7dp3o"]
+atlas = ExtResource("2_cvnsp")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h4iuc"]
+atlas = ExtResource("2_cvnsp")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fd4e3"]
+atlas = ExtResource("2_cvnsp")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qqcod"]
+atlas = ExtResource("2_cvnsp")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_igrcy"]
+atlas = ExtResource("2_cvnsp")
+region = Rect2(320, 0, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_6d06k"]
 animations = [{
@@ -114,6 +147,65 @@ animations = [{
 "loop": true,
 "name": &"E-Brake",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gymyn")
+}],
+"loop": true,
+"name": &"F-Slide",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pu2lt")
+}],
+"loop": true,
+"name": &"G-Dive",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ukyrk")
+}],
+"loop": true,
+"name": &"H-Dash",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7dp3o")
+}],
+"loop": true,
+"name": &"H-Vault",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h4iuc")
+}],
+"loop": true,
+"name": &"I-Check",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fd4e3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qqcod")
+}],
+"loop": false,
+"name": &"J-Taunt",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_igrcy")
+}],
+"loop": true,
+"name": &"K-WallJump",
+"speed": 5.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ymxaj"]
@@ -126,10 +218,50 @@ collision_layer = 2
 [node name="MonaSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -32)
 sprite_frames = SubResource("SpriteFrames_6d06k")
-animation = &"A-Idle"
+animation = &"F-Slide"
 autoplay = "A-Idle"
-frame_progress = 0.190043
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(3, -25)
 shape = SubResource("CapsuleShape2D_ymxaj")
+
+[node name="RayCast-Ceiling" type="RayCast2D" parent="."]
+position = Vector2(3, -48)
+rotation = -3.14159
+target_position = Vector2(0, 2)
+
+[node name="RayCast-WallRight" type="RayCast2D" parent="."]
+position = Vector2(0, -32)
+rotation = -1.5708
+target_position = Vector2(0, 16)
+hit_from_inside = true
+
+[node name="RayCast-WallLeft" type="RayCast2D" parent="."]
+position = Vector2(6, -32)
+rotation = 1.5708
+target_position = Vector2(0, 16)
+hit_from_inside = true
+
+[node name="RayCast-SlideRight" type="RayCast2D" parent="."]
+position = Vector2(6, -5)
+rotation = -0.785398
+target_position = Vector2(0, 11.3137)
+hit_from_inside = true
+
+[node name="RayCast-SlideLeft" type="RayCast2D" parent="."]
+position = Vector2(4.76837e-07, -5)
+rotation = 0.785398
+target_position = Vector2(0, 11.3137)
+hit_from_inside = true
+
+[node name="RayCast-VaultRight" type="RayCast2D" parent="."]
+position = Vector2(6, -10)
+rotation = -2.35619
+target_position = Vector2(19.0919, 45.9619)
+hit_from_inside = true
+
+[node name="RayCast-VaultLeft" type="RayCast2D" parent="."]
+position = Vector2(-1.07288e-06, -10)
+rotation = 1.74533
+target_position = Vector2(-41.017, 26.5255)
+hit_from_inside = true
