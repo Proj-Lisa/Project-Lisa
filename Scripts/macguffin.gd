@@ -18,9 +18,9 @@ func _ready() -> void:
 	gManager.max1Count += 1 #each collectible instance updates the number of this macguffin in the scene
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
-func _on_body_entered(body: Node2D) -> void: #upon entering the sprite, pick it up and remove it
+func _on_body_entered(_body: Node2D) -> void: #upon entering the sprite, pick it up and remove it
 	gManager.addMacGuff1() #update Game Manager score tracker
 	queue_free() #removes from Scene

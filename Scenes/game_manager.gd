@@ -32,7 +32,7 @@ func _ready() -> void:
 	#add conditional to hide until quest giver gives it
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	#keep UI relative to Mona
 	txtCollect1.position.x = %Mona.position.x + txt1XOffset
 	txtCollect1.position.y = %Mona.position.y + txt1YOffset

@@ -5,7 +5,7 @@ extends Area2D
 const BOUCE_VELOCITY = -800.0
 const SLOMO = 0.3
 
-func _on_body_entered(body: Node2D) -> void:
+func _on_body_entered(_body: Node2D) -> void:
 	Engine.time_scale = SLOMO
 	# body.get_node("CollisionShape2D").queue_free() #Mona passes through objects
 	# unless we restart the scene we need to add it back (not during the Bounce: will break game hard)

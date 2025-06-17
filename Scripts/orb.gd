@@ -15,7 +15,7 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	# if picked up, countdown the time to respawn
 	if PickedUp == true:
 		RespawnTimer += 1
@@ -28,7 +28,7 @@ func _process(delta: float) -> void:
 		orbCollision.set_deferred("disabled", false)
 		#queue_redraw() #doesnt work returning it to the Scene
 
-func _on_body_entered(body: Node2D) -> void: #upon entering the orb, pick it up and remove it
+func _on_body_entered(_body: Node2D) -> void: #upon entering the orb, pick it up and remove it
 	print("got orb")
 	
 	#remove orb

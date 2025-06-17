@@ -218,7 +218,7 @@ collision_layer = 2
 [node name="MonaSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -32)
 sprite_frames = SubResource("SpriteFrames_6d06k")
-animation = &"F-Slide"
+animation = &"A-Idle"
 autoplay = "A-Idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
