@@ -5,7 +5,8 @@ extends Area2D
 
 var PickedUp = false
 var RespawnTimer = 0
-const Time2Respawn = 100
+const TIME_TO_RESPAWN = 100
+const SPEED_BOOST = 50
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -21,15 +22,22 @@ func _process(_delta: float) -> void:
 		RespawnTimer += 1
 	
 	#once time is up, respawn and reset timer
-	if RespawnTimer == Time2Respawn:
+	if RespawnTimer == TIME_TO_RESPAWN:
 		PickedUp = false
 		RespawnTimer = 0
 		animSprite.show()
 		orbCollision.set_deferred("disabled", false)
 		#queue_redraw() #doesnt work returning it to the Scene
 
-func _on_body_entered(_body: Node2D) -> void: #upon entering the orb, pick it up and remove it
+func _on_body_entered(body: Node2D) -> void: #upon entering the orb, pick it up and remove it
 	print("got orb")
+	
+	#apply speed boost, based on direction
+	if body.velocity.x > 0:
+		body.velocity.x += SPEED_BOOST
+	elif body.velocity.x < 0:
+		body.velocity.x += SPEED_BOOST * -1
+	#if stand on an orb when it respawns, eg velocity == 0, then apply no movement
 	
 	#remove orb
 	PickedUp = true

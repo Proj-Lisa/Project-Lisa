@@ -163,8 +163,7 @@ const SPEED_MAX = 800
 const SPEED_3 = 700
 const SPEED_THAT_BRAKES = 300
 const SPEED_2 = 240
-const SLOW_TO_MAX = ACCEL_MAIN + 1 			#must be greater than base movement to slow down
-const SLOW_FROM_DASH = SLOW_TO_MAX * 1.25	#faster after a dash to compensate
+const SLOW_TO_MAX = ACCEL_MAIN + 1 #must be greater than base movement to slow down
 #speed boost from orbs is defined in orb.gd
 
 #jump and gravity values
@@ -175,15 +174,6 @@ const GRAVITY_FACTOR = 1.8	#increases gravity for faster-fall responsiveness
 const GRAVITY_ONGROUND = 50
 var stickToGround = true
 var disableJump = false		#used to prevent jumping while in the air and other states
-#jump variants
-const HIGH_JUMP_X_PENALTY = -50
-const LONG_JUMP_Y_PENALTY = 50
-var jumpBoost = 0			#both based on percent of maxSpeed achieved, in the moment
-#var highJump = 0			#same value for both, just applied to X or y
-const JUMP_BOOST_FACTOR = 10#multiplies the timer by this # for the variable boost figure
-const MAX_JUMP_BOOST = 300
-
-#high jump not implemented: use a motion path for it instead?
 
 #Mona hangs in the air if jump is held ever so slightly
 const HANGTIME_WINDOW = 10
@@ -191,8 +181,8 @@ const HANGTIME_SPEED = 0.12
 var hangtime = 1 #normally no effect on velocity, but use a move_toward 0 while holding Jump, release to reset
 var hangtimeStart = false
 
-const DECEL = 80				#used to slow down
-const DECEL_SLIDE = 16			#for isAbrupt
+var DECEL = 80			#used to slow down
+var DECEL_SLIDE = 16	#for isAbrupt
 var goingUp = true		#vertical direction, fall or jump animation
 var smoothingTimer = 0	#prevents flashing of fall sprite when running over little bumps
 const SMOOTHING_RUN_MARGIN = 4
@@ -203,9 +193,8 @@ const END_BRAKING = 10	#frames braking locks Mona
 
 #slide controls
 var isSliding = false
-var slideTimer = 0			 #used for raising LongJumpBoost
-const SLIDE_SPEED = 20		 #not a multiplier but a rate moving to 0 like DECEL
-const SLIDE_UNDER_BOOST = 10 #prevents standing underneath slide-unders
+var isChecking = false #when not moving
+const SLIDE_SPEED = 20 #not a multiplier but a rate moving to 0 like DECEL
 
 #dive controls
 var diveSpeed = 1
@@ -252,6 +241,10 @@ const ColSlideSY = 0.5
 @onready var checkCeiling = $\"RayCast-Ceiling\"	#to disableJump when hitting a ceiling
 @onready var checkWallRight = $\"RayCast-WallRight\"
 @onready var checkWallLeft = $\"RayCast-WallLeft\"
+@onready var checkSlideRight = $\"RayCast-SlideRight\"
+@onready var checkSlideLeft = $\"RayCast-SlideLeft\"
+@onready var checkVaultRight = $\"RayCast-VaultRight\"
+@onready var checkvaultLeft = $\"RayCast-VaultLeft\"
 
 #screen wrap + camera settings
 @onready var wrapLeftSeam = $\"../Ground/WrapperLeft\" #for screenwrapping
@@ -260,11 +253,11 @@ const ColSlideSY = 0.5
 const CAMERA_LAG_MAX = 75		#increase to teens once refined the camera adjustment rates
 const CAMERA_LAG_DECREASE = -3
 var cameraLagTimer = 0
-const CAMERA_MAX_X_OFFSET: float = 250.00	 #float declarations avoid a division error later
-const CAMERA_X_OFFSET_FACTOR: float = 200.00 #divides current velocity to scale the variable below
+const CAMERA_MAX_X_OFFSET = 250
+const CAMERA_X_OFFSET_FACTOR = 200 #divides current velocity to scale the variable below
 const CAMERA_RESET_SPEED = 6
 var cameraXOffsetSpeed = 0
-var cameraOffsetAccel: float = 1.00		#used for exponential slowdown towards Offset 0 and max
+var cameraOffsetAccel = 1		#used for exponential slowdown towards Offset 0 and max
 const CAMERA_MAX_ZOOM_IN = 2.5
 const CAMERA_MAX_ZOOM_OUT = 1.4
 const CAMERA_ZOOM_IN = .04
@@ -335,17 +328,10 @@ func _physics_process(delta: float) -> void:
 	else:
 		jumpDirectionRight = false
 	
-	#for long and high jumps
-	set_jump_boost()
-	
 	#variable Jump, up to max, and disable jump until hitting the ground with input released (otherwise hops)
 	if Input.is_action_pressed(\"jump\") and disableJump == false:
 		if not onWall:
 			velocity.y += ACCEL_JUMP
-			if Input.is_action_pressed(\"slide\"):
-				if is_on_floor():
-					velocity.x += jumpBoost * direction
-					velocity.y += LONG_JUMP_Y_PENALTY
 		else:
 			velocity.y += ACCEL_JUMP * ON_WALL_DRAG
 	elif Input.is_action_just_pressed(\"jump\") and disableJump: #wall jump
@@ -419,7 +405,6 @@ func _physics_process(delta: float) -> void:
 						monaSprite.play(\"D-Fall\")
 			else:
 				monaSprite.play(\"C-Jump\")
-	#H-Vault plays as triggered in vault_target.gd
 	
 	#apply the movement
 	if direction:
@@ -438,12 +423,9 @@ func _physics_process(delta: float) -> void:
 			else:
 				brakeTimer = 0 #failsafe inclusion
 				if Input.is_action_pressed(\"dash\") or not Input.is_action_pressed(\"slide\"):
-					velocity.x += ACCEL_MAIN * direction
-					if not checkCeiling.is_colliding(): #prevents getting stuck under places
-						monaCollisionTop.set_deferred(\"disabled\", false)
-					else:
-						velocity.x += SLIDE_UNDER_BOOST * direction
-					isSliding = false #for animation
+					monaCollisionTop.set_deferred(\"disabled\", false)
+					velocity.x += direction * ACCEL_MAIN
+					isSliding = false
 					if Input.is_action_pressed(\"dash\") and not dashDisabled:
 						velocity.x += direction * DASH_SPEED
 						dashDisabled = true
@@ -454,23 +436,14 @@ func _physics_process(delta: float) -> void:
 					isSliding = true
 	#if not moving, slow down
 	elif is_on_floor(): #dont slow down in the air
-		if not checkCeiling.is_colliding(): #wont slow down if would get stuck under an object
-			velocity.x = move_toward(velocity.x, 0, DECEL)
-		else:
-			velocity.x += SLIDE_UNDER_BOOST #if stuck and still
+		velocity.x = move_toward(velocity.x, 0, DECEL)
 	
 	#Mona can exceed maxSpeed via Boosts, but quickly returns to it
 	if abs(velocity.x) > SPEED_MAX:
 		if direction > 0:
-			if dashDisabled:
-				velocity.x = move_toward(velocity.x, SPEED_MAX, SLOW_FROM_DASH)
-			else:
-				velocity.x = move_toward(velocity.x, SPEED_MAX, SLOW_TO_MAX)
+			velocity.x = move_toward(velocity.x, SPEED_MAX, SLOW_TO_MAX)
 		elif direction < 0:
-			if dashDisabled:
-				velocity.x = move_toward(velocity.x, SPEED_MAX * -1, SLOW_FROM_DASH)
-			else:
-				velocity.x = move_toward(velocity.x, SPEED_MAX * -1, SLOW_TO_MAX)
+			velocity.x = move_toward(velocity.x, SPEED_MAX * -1, SLOW_TO_MAX)
 	
 	#Dash cooldown timer and status; handled here instead of clogging up movement function
 	if dashDisabled and dashCooldownTimer == DASH_COOLDOWN_MAX:
@@ -491,6 +464,10 @@ func _physics_process(delta: float) -> void:
 		disableHorizTimer = 0
 	elif disableHoriz:
 		disableHorizTimer += 1
+	
+	#vault
+	if checkVaultRight.is_colliding():
+		pass
 	
 	#screen wrap based on direction
 	screen_wrap()
@@ -541,34 +518,6 @@ func screen_wrap():
 	
 	cameraMona.limit_smoothed = true #re-enable camera smoothing
 	cameraMona.position_smoothing_enabled = true
-
-#used to determine the boost to the long and high jumps
-func set_jump_boost():
-	if isSliding: #when implementing high jump, could just add to this figure
-		slideTimer += 1
-	else:
-		slideTimer = 0
-	
-	#longer the slide, farther the boost
-	jumpBoost = slideTimer * JUMP_BOOST_FACTOR
-	
-	#caps the boost max and disables if held too long, when slowed to a near-stop
-	if jumpBoost > MAX_JUMP_BOOST:
-		jumpBoost = MAX_JUMP_BOOST
-	if abs(velocity.x) < 5: #arbitrary # to prevent a (stacking) boost w/no momentum
-		jumpBoost = 0
-	
-	print(slideTimer)
-	print(jumpBoost)
-	
-	#older drafts
-	#v1
-	#jumpBoost = (abs(velocity.x) / SPEED_MAX) * MAX_JUMP_BOOST
-	#v2
-	#if abs(velocity.x) != 0:
-	#	jumpBoost = (SPEED_MAX / abs(velocity.x) ) * MAX_JUMP_BOOST
-	#else:
-	#	jumpBoost = MAX_JUMP_BOOST
 "
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_iivbl"]
@@ -1157,7 +1106,7 @@ texture = ExtResource("2_exi56")
 
 [node name="Outline" type="Sprite2D" parent="BG"]
 visible = false
-position = Vector2(6017, 96)
+position = Vector2(-7785, -886.75)
 scale = Vector2(7.65107, 5.51166)
 texture = ExtResource("2_iivbl")
 
@@ -1173,7 +1122,7 @@ tile_set = SubResource("TileSet_iivbl")
 
 [node name="DropThrus" type="TileMapLayer" parent="BG"]
 position = Vector2(13666.8, 992.003)
-tile_map_data = PackedByteArray("AADg/N3/AAAGABgAAADk/N3/AAAGABgAAADo/N3/AAAGABgAAADs/N3/AAAGABgAAADw/N3/AAAGABgAAADz/N3/AAAAABgAAAD3/N3/AAAIAB4AAADF/dz/AAAGABgAAADB/dz/AAAGABgAAAC9/dz/AAAGABgAAAC5/dz/AAAGABgAAADL/dz/AAAIABwAAADm/t3/AAAIABwAABDr/t3/AAAAABgAAADw/t3/AAAIABwAAAAM/tz/AAAEAB4AABAW/tz/AAAIABwAAAAQ/tz/AAAGABgAAADc/N3/AAAGABgAAAA=")
+tile_map_data = PackedByteArray("AADc/N3/AAAGABgAAADg/N3/AAAGABgAAADk/N3/AAAGABgAAADo/N3/AAAGABgAAADs/N3/AAAGABgAAADw/N3/AAAGABgAAADz/N3/AAAAABgAAAD3/N3/AAAIAB4AAADF/dz/AAAGABgAAADB/dz/AAAGABgAAAC9/dz/AAAGABgAAAC5/dz/AAAGABgAAADL/dz/AAAIABwAAADm/t3/AAAIABwAABDr/t3/AAAAABgAAADw/t3/AAAIABwAAAAM/tz/AAAEAB4AABAW/tz/AAAIABwAAAAQ/tz/AAAGABgAAAA=")
 tile_set = SubResource("TileSet_iivbl")
 script = ExtResource("4_85qyi")
 
@@ -1225,14 +1174,14 @@ scale = Vector2(11.84, 1)
 shape = SubResource("RectangleShape2D_iivbl")
 
 [node name="WrapperLeft" parent="Ground" instance=ExtResource("5_rfjv2")]
-position = Vector2(-113, -985)
+position = Vector2(106.772, -984.997)
 collision_mask = 2
 
 [node name="RayCast2D" type="RayCast2D" parent="Ground/WrapperLeft"]
 target_position = Vector2(-292, 0)
 
 [node name="WrapperRight" parent="Ground" instance=ExtResource("5_rfjv2")]
-position = Vector2(10205, -929)
+position = Vector2(10424.8, -928.997)
 
 [node name="RayCast2D" type="RayCast2D" parent="Ground/WrapperRight"]
 target_position = Vector2(284, -0.25)
@@ -1350,44 +1299,15 @@ rotation = 2.74779
 [node name="Vaults" type="Node" parent="."]
 
 [node name="VaultTarget" parent="Vaults" instance=ExtResource("15_exi56")]
-position = Vector2(5877, 855)
-
-[node name="VaultTarget6" parent="Vaults" instance=ExtResource("15_exi56")]
-position = Vector2(3701, 809)
+position = Vector2(5813, 903)
 
 [node name="VaultTarget2" parent="Vaults" instance=ExtResource("15_exi56")]
-position = Vector2(6372, 853)
-
-[node name="VaultTarget3" parent="Vaults" instance=ExtResource("15_exi56")]
-position = Vector2(7512, 134)
-
-[node name="VaultTarget4" parent="Vaults" instance=ExtResource("15_exi56")]
-position = Vector2(8216, 22)
-
-[node name="VaultTarget5" parent="Vaults" instance=ExtResource("15_exi56")]
-position = Vector2(8728, -170)
-
-[node name="VaultTargetLeft" parent="Vaults" instance=ExtResource("15_exi56")]
-position = Vector2(5922, 854)
-
-[node name="VaultTargetLeft2" parent="Vaults" instance=ExtResource("15_exi56")]
-position = Vector2(8979, -634)
-
-[node name="VaultTargetLeft3" parent="Vaults" instance=ExtResource("15_exi56")]
-position = Vector2(6819, -394)
-
-[node name="Aerial" type="Node" parent="Vaults"]
-
-[node name="VaultTargetLeft4" parent="Vaults/Aerial" instance=ExtResource("15_exi56")]
-position = Vector2(5606, -495)
-
-[node name="VaultTargetLeft5" parent="Vaults/Aerial" instance=ExtResource("15_exi56")]
-position = Vector2(5392, -479)
+position = Vector2(6309, 903)
 
 [node name="Mona" parent="." instance=ExtResource("1_ebmjs")]
 unique_name_in_owner = true
 z_index = 5
-position = Vector2(594, 389)
+position = Vector2(5542, 937)
 script = SubResource("GDScript_ebmjs")
 
 [node name="CameraMona" type="Camera2D" parent="Mona"]

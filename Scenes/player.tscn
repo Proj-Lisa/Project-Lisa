@@ -210,7 +210,7 @@ animations = [{
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ymxaj"]
 radius = 3.0
-height = 48.0
+height = 35.7144
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
@@ -218,17 +218,23 @@ collision_layer = 2
 [node name="MonaSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -32)
 sprite_frames = SubResource("SpriteFrames_6d06k")
-animation = &"A-Idle"
+animation = &"H-Vault"
 autoplay = "A-Idle"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(3, -25)
+[node name="CollisionTop" type="CollisionShape2D" parent="."]
+position = Vector2(3, -33)
+scale = Vector2(1, 0.959999)
+shape = SubResource("CapsuleShape2D_ymxaj")
+
+[node name="CollisionBot" type="CollisionShape2D" parent="."]
+position = Vector2(3, -13)
+scale = Vector2(0.520001, 0.559998)
 shape = SubResource("CapsuleShape2D_ymxaj")
 
 [node name="RayCast-Ceiling" type="RayCast2D" parent="."]
-position = Vector2(3, -48)
+position = Vector2(3, -19)
 rotation = -3.14159
-target_position = Vector2(0, 2)
+target_position = Vector2(8.36849e-05, 33)
 
 [node name="RayCast-WallRight" type="RayCast2D" parent="."]
 position = Vector2(0, -32)
@@ -240,28 +246,4 @@ hit_from_inside = true
 position = Vector2(6, -32)
 rotation = 1.5708
 target_position = Vector2(0, 16)
-hit_from_inside = true
-
-[node name="RayCast-SlideRight" type="RayCast2D" parent="."]
-position = Vector2(6, -5)
-rotation = -0.785398
-target_position = Vector2(0, 11.3137)
-hit_from_inside = true
-
-[node name="RayCast-SlideLeft" type="RayCast2D" parent="."]
-position = Vector2(4.76837e-07, -5)
-rotation = 0.785398
-target_position = Vector2(0, 11.3137)
-hit_from_inside = true
-
-[node name="RayCast-VaultRight" type="RayCast2D" parent="."]
-position = Vector2(6, -10)
-rotation = -2.35619
-target_position = Vector2(19.0919, 45.9619)
-hit_from_inside = true
-
-[node name="RayCast-VaultLeft" type="RayCast2D" parent="."]
-position = Vector2(-1.07288e-06, -10)
-rotation = 1.74533
-target_position = Vector2(-41.017, 26.5255)
 hit_from_inside = true

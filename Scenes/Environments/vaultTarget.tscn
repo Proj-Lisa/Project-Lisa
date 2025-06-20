@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=3 uid="uid://b6aq8n5ynh1v"]
+
+[ext_resource type="Script" uid="uid://petth0oulnp3" path="res://Scripts/vault_target.gd" id="1_0x5yp"]
+[ext_resource type="Texture2D" uid="uid://bbixfit8lst5c" path="res://Sprites/Objects/Object-Pickup-Smoothie.png" id="1_mo328"]
+
+[sub_resource type="Curve2D" id="Curve2D_0x5yp"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 17, -40, 0, 0, 0, 0, 21, -66, 0, 0, 0, 0, 29, -93, 0, 0, 0, 0, 47, -107, 0, 0, 0, 0, 68, -112)
+}
+point_count = 5
+
+[node name="VaultTarget" type="Area2D"]
+collision_mask = 2
+script = ExtResource("1_0x5yp")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+position = Vector2(-34.5, 41.3)
+polygon = PackedVector2Array(-41, -4, -35, -46, -22, -67, -3, -75, 34, -75, 34, -41, 12, -41, -3, -27, -4, -4)
+
+[node name="Path2D" type="Path2D" parent="."]
+position = Vector2(-81.5, 66.3)
+curve = SubResource("Curve2D_0x5yp")
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Path2D"]
+position = Vector2(17, -40)
+rotation = -1.41815
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-64.5, 23.3)
+rotation = -0.313684
+texture = ExtResource("1_mo328")
+flip_h = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
