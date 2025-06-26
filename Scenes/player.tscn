@@ -249,9 +249,9 @@ target_position = Vector2(0, 16)
 hit_from_inside = true
 
 [node name="RayCast-SlopeRight" type="RayCast2D" parent="."]
-position = Vector2(16, -18)
+position = Vector2(16, -16)
 scale = Vector2(-3.37633, 0.153464)
 
 [node name="RayCast-SlopeLeft" type="RayCast2D" parent="."]
-position = Vector2(-9, -18)
+position = Vector2(-9, -16)
 scale = Vector2(-3.37633, 0.153464)

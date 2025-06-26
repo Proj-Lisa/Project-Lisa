@@ -161,7 +161,7 @@ const FLOOR_SNAP = 20	#snaps Mona to the floor; disabled while jumping
 #speed thresholds
 const SPEED_MAX = 800
 const SPEED_3 = 700
-#const SPEED_THAT_RAMPS = 450
+const SPEED_THAT_RAMPS = 450
 const SPEED_THAT_BRAKES = 300
 const SPEED_2 = 240
 const SLOW_TO_MAX = ACCEL_MAIN + 1 			#must be greater than base movement to slow down
@@ -179,13 +179,13 @@ var disableJump = false		#used to prevent jumping while in the air and other sta
 
 #jump variants
 const HIGH_JUMP_X_PENALTY = 10 #move-toward-0 increment
-const LONG_JUMP_Y_PENALTY = 100
+const LONG_JUMP_Y_PENALTY = 200
 var jumpBoost = 0			#both based on percent of maxSpeed achieved, in the moment
 const JUMP_BOOST_FACTOR = 30#multiplies the timer by this # for the variable boost figure
-const MAX_JUMP_BOOST = 920	#halved for vertical
+const MAX_JUMP_BOOST = 980	#decreased vertical by HIGH_JUMP_FRACTION
 const HIGH_JUMP_BOOST = 2	#flat figure multiplied by JUMP_BOOST_FACTOR
 const MIN_SPEED_FOR_LONG_JUMP = 5
-const HIGH_JUMP_FRACTION = 0.75 #proportion of vertical jumpBoost applied during High Jump
+const HIGH_JUMP_FRACTION = 0.4 #proportion of vertical jumpBoost applied during High Jump
 
 #Mona hangs in the air if jump is held ever so slightly
 const HANGTIME_WINDOW = 10
@@ -288,9 +288,10 @@ var cameraZoomTimer = 0
 func _physics_process(delta: float) -> void:
 	#set default snap2ground height
 	floor_snap_length = FLOOR_SNAP
+	var isOnFloor = is_on_floor() #currently just for checking slope adjustments; replace all of these funcs?
 	
 	# Add the gravity.
-	if not is_on_floor():
+	if not isOnFloor:
 		#check if diving: sliding in air
 		if Input.is_action_pressed(\"slide\"):
 			isDiving = true
@@ -318,7 +319,7 @@ func _physics_process(delta: float) -> void:
 	#rotate the sprite to match terrain angle, but not while standing still
 	var floorNormal = get_floor_normal()
 	var spriteRotation = floorNormal.angle() + PI / 2
-	if is_on_floor():
+	if isOnFloor:
 		if abs(velocity.x) > MIN_SPEED_TO_ROTATE:
 			monaSprite.rotation = lerp_angle(monaSprite.rotation, spriteRotation, SPRITE_ROTATION_SPEED_GROUND * delta)
 		else:
@@ -327,29 +328,33 @@ func _physics_process(delta: float) -> void:
 	else:
 		monaSprite.rotation = lerp_angle(monaSprite.rotation, 0, SPRITE_ROTATION_SPEED_AIR * delta)
 	
-	#given steep terrain, hop up slopes
-	if is_on_floor():
-		if abs(velocity.x) > SPEED_2:
-			var currentSlopeAngle = direction * (rad_to_deg(floorNormal.angle())+90)
-			if checkSlopeRight.is_colliding():
-				var slopeRight = rad_to_deg(checkSlopeRight.get_collision_normal().angle())
-				if slopeRight > 3 * currentSlopeAngle:
-					slopeVelocityAdjustment = SLOPE_MULTIPLIER * abs(slopeRight - currentSlopeAngle)
-					#print(\"right\" + str(slopeRight) + \"- current \" + str(currentSlopeAngle))
-			elif checkSlopeLeft.is_colliding():
-				var slopeLeft = rad_to_deg(checkSlopeRight.get_collision_normal().angle())
-				if slopeLeft < 3 * currentSlopeAngle:	#backwards because negative angles
-					slopeVelocityAdjustment = SLOPE_MULTIPLIER * abs(slopeLeft - currentSlopeAngle)
-					#print(\"L\")
-			else:
-				slopeVelocityAdjustment = 0
-				#print(currentSlopeAngle)
-	
 	#determine vertical direction; since physics does not use this value, it does not need to be numerical
 	if velocity.y > 0:
 		goingUp = false
 	else:
 		goingUp = true
+	
+	#given steep terrain, hop up slopes
+	if isOnFloor: #if separated anyway, re-replace with function? if not, replace other funcs with this var?
+		if abs(velocity.x) > SPEED_THAT_RAMPS:
+			var currentSlopeAngle =(rad_to_deg(floorNormal.angle())+90)
+			var slopeRight = rad_to_deg(checkSlopeRight.get_collision_normal().angle())
+			var slopeLeft = rad_to_deg(checkSlopeLeft.get_collision_normal().angle())
+			#print(\"---\")
+			#print(\"Current: \" + str(currentSlopeAngle))
+			#print(\"L: \" + str(slopeLeft))
+			#print(\"R: \" + str(slopeRight))
+			if checkSlopeRight.is_colliding():
+				if slopeRight > 3 * currentSlopeAngle:
+					slopeVelocityAdjustment = SLOPE_MULTIPLIER * abs(slopeRight - currentSlopeAngle)
+					#print(\"right\" + str(slopeRight) + \"- current \" + str(currentSlopeAngle))
+			elif checkSlopeLeft.is_colliding():
+				if slopeLeft > 3 * currentSlopeAngle:	#backwards because negative angles
+					slopeVelocityAdjustment = SLOPE_MULTIPLIER * abs(slopeLeft - currentSlopeAngle)
+					#print(\"L\")
+			else:
+				slopeVelocityAdjustment = 0
+				#print(currentSlopeAngle)
 	
 	#determines whether the stop is a hard stop for different behaviors at higher speed
 	if Input.is_action_pressed(\"move_Left\") and velocity.x > SPEED_THAT_BRAKES:
@@ -383,13 +388,13 @@ func _physics_process(delta: float) -> void:
 			velocity.y += ACCEL_JUMP
 			
 			#Long Jump
-			if Input.is_action_pressed(\"slide\"):
-				if is_on_floor():
+			if Input.is_action_pressed(\"slide\") and Input.is_action_just_pressed(\"jump\"):
+				if isOnFloor:
 					velocity.x += jumpBoost * direction
 					velocity.y += LONG_JUMP_Y_PENALTY
 			#High Jump
 			elif Input.is_action_pressed(\"dash\"):
-				if is_on_floor():
+				if isOnFloor:
 					velocity.y += jumpBoost * -1 #so it goes up
 					high_jump_moves_to_zero_x() #applies X penalty to stop sideways momentum gradually on ascent
 		#hangs on the wall, but doesnt cancel gravity
@@ -409,7 +414,7 @@ func _physics_process(delta: float) -> void:
 		
 	if abs(velocity.y) > MAX_JUMP or Input.is_action_just_released(\"jump\") or checkCeiling.is_colliding():
 		disableJump = true
-	if is_on_floor() and not Input.is_action_pressed(\"jump\"):
+	if isOnFloor and not Input.is_action_pressed(\"jump\"):
 		disableJump = false
 
 	#if still holding jump at the apex, then sustain the jump for a brief moment, scaled with horizontal speed
@@ -424,7 +429,7 @@ func _physics_process(delta: float) -> void:
 		hangtime = 1
 	
 	#play animations
-	if is_on_floor():
+	if isOnFloor:
 		smoothingTimer = 0 #for animation smoothing
 		if direction == 0:
 			if Input.is_action_pressed(\"dash\"):
@@ -470,7 +475,7 @@ func _physics_process(delta: float) -> void:
 	
 	#apply the movement
 	if direction:
-		if not is_on_floor():
+		if not isOnFloor:
 			if not disableHoriz: #for wallJumping
 				velocity.x += direction * ACCEL_AIR
 		else: #brake/Decel for a abrupt turns
@@ -501,7 +506,7 @@ func _physics_process(delta: float) -> void:
 					monaCollisionTop.set_deferred(\"disabled\", true)
 					isSliding = true
 	#if not moving, slow down
-	elif is_on_floor(): #dont slow down in the air
+	elif isOnFloor: #dont slow down in the air
 		if not checkCeiling.is_colliding(): #wont slow down if would get stuck under an object
 			velocity.x = move_toward(velocity.x, 0, DECEL)
 		else:
